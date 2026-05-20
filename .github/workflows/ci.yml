@@ -1,0 +1,38 @@
+name: CI - Build and Test
+
+on:
+  push:
+    branches: [ "**" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  build-and-test:
+    name: Build and Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 9
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      # === USER SERVICE ===
+      - name: Restore UserService
+        run: dotnet restore ./UserService/UserService.sln
+
+      - name: Build UserService
+        run: dotnet build ./UserService/UserService.sln --configuration Release --no-restore
+
+      - name: Test UserService
+        run: dotnet test ./UserService/UserService.sln --configuration Release --no-build --verbosity normal
+
+      # === TRAINING MANAGEMENT SERVICE ===
+      - name: Restore TrainingManagementService
+        run: dotnet restore ./TrainingManagementService/TrainingManagementService.sln
+
+      - name: Build TrainingManagementService
+        run: dotnet build ./TrainingManagementService/TrainingManagementService.sln --configuration Release --no-restore
