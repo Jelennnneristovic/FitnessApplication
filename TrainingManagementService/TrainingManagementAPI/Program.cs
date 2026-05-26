@@ -6,6 +6,7 @@ using System.Text;
 using TrainingManagementApplication.Interfaces;
 using TrainingManagementApplication.Services;
 using TrainingManagementInfrastructure.Data;
+using TrainingManagementInfrastructure.ExternalServices;
 using TrainingManagementInfrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -55,6 +56,22 @@ builder.Services
     });
 
 builder.Services.AddAuthorization();
+
+// === HTTP Client za NotificationService ===
+builder.Services.AddHttpClient<INotificationServiceClient, NotificationServiceClient>(client =>
+{
+    var notificationServiceUrl = builder.Configuration["Services:NotificationServiceUrl"]!;
+    client.BaseAddress = new Uri(notificationServiceUrl);
+})
+.ConfigurePrimaryHttpMessageHandler(() =>
+{
+    return new HttpClientHandler
+    {
+        // SAMO ZA DEVELOPMENT - ignorisi self-signed sertifikat
+        ServerCertificateCustomValidationCallback =
+            HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+    };
+});
 
 var app = builder.Build();
 

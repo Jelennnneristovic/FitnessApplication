@@ -25,7 +25,7 @@ namespace TrainingManagementAPI.Controllers
         // Klijent salje zahtev za prijavu na plan
         [HttpPost]
         [Authorize(Roles = "Client")]
-        public async Task<IActionResult> Request([FromBody] CreateEnrollmentRequest request)
+        public async Task<IActionResult> RequestEnrollment([FromBody] CreateEnrollmentRequest request)
         {
             try
             {
@@ -131,7 +131,9 @@ namespace TrainingManagementAPI.Controllers
                 var trainerId = GetCurrentUserId();
                 if (trainerId == null) return Unauthorized();
 
-                var enrollment = await _enrollmentService.ApproveAsync(id, trainerId.Value);
+                var token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+
+                var enrollment = await _enrollmentService.ApproveAsync(id, trainerId.Value, token);
                 return Ok(enrollment);
             }
             catch (KeyNotFoundException ex)
@@ -148,7 +150,7 @@ namespace TrainingManagementAPI.Controllers
             }
         }
 
-        // Trener odbija zahtev
+        //trener odbija zahtev
         [HttpPatch("{id:guid}/reject")]
         [Authorize(Roles = "Trainer")]
         public async Task<IActionResult> Reject(Guid id, [FromBody] RejectEnrollmentRequest request)
@@ -158,7 +160,9 @@ namespace TrainingManagementAPI.Controllers
                 var trainerId = GetCurrentUserId();
                 if (trainerId == null) return Unauthorized();
 
-                var enrollment = await _enrollmentService.RejectAsync(id, trainerId.Value, request);
+                var token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+
+                var enrollment = await _enrollmentService.RejectAsync(id, trainerId.Value, token, request);
                 return Ok(enrollment);
             }
             catch (KeyNotFoundException ex)

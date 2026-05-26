@@ -15,13 +15,16 @@ namespace TrainingManagementApplication.Services
     {
         private readonly IEnrollmentRepository _enrollmentRepository;
         private readonly ITrainingPlanRepository _planRepository;
+        private readonly INotificationServiceClient _notificationClient;
 
         public EnrollmentService(
             IEnrollmentRepository enrollmentRepository,
-            ITrainingPlanRepository planRepository)
+            ITrainingPlanRepository planRepository,
+            INotificationServiceClient notificationClient)
         {
             _enrollmentRepository = enrollmentRepository;
             _planRepository = planRepository;
+            _notificationClient = notificationClient;
         }
 
         // === KLIJENT ===
@@ -113,7 +116,7 @@ namespace TrainingManagementApplication.Services
             return enrollments.Select(MapToResponse);
         }
 
-        public async Task<EnrollmentResponse> ApproveAsync(Guid enrollmentId, Guid trainerId)
+        public async Task<EnrollmentResponse> ApproveAsync(Guid enrollmentId, Guid trainerId, string bearerToken)
         {
             var enrollment = await _enrollmentRepository.GetByIdAsync(enrollmentId)
                 ?? throw new KeyNotFoundException("Zahtev nije pronadjen.");
@@ -124,7 +127,6 @@ namespace TrainingManagementApplication.Services
             if (enrollment.Status != EnrollmentStatus.Pending)
                 throw new InvalidOperationException("Mozete odobriti samo zahtev koji ceka odgovor.");
 
-            // Provera kapaciteta (mogla se promeniti od kreiranja zahteva)
             var approvedCount = await _enrollmentRepository.CountApprovedByPlanAsync(enrollment.TrainingPlanId);
             if (approvedCount >= enrollment.TrainingPlan.MaxParticipants)
                 throw new InvalidOperationException("Plan je popunjen. Ne mozete odobriti vise zahteva.");
@@ -133,10 +135,19 @@ namespace TrainingManagementApplication.Services
             enrollment.RespondedAt = DateTime.UtcNow;
 
             await _enrollmentRepository.UpdateAsync(enrollment);
+
+            // === NOTIFIKACIJA ===
+            await _notificationClient.SendNotificationAsync(
+                userId: enrollment.ClientId,
+                title: "Zahtev odobren!",
+                content: $"Vas zahtev za plan \"{enrollment.TrainingPlan.Title}\" je odobren.",
+                type: 1,  // Success
+                bearerToken: bearerToken);
+
             return MapToResponse(enrollment);
         }
 
-        public async Task<EnrollmentResponse> RejectAsync(Guid enrollmentId, Guid trainerId, RejectEnrollmentRequest request)
+        public async Task<EnrollmentResponse> RejectAsync(Guid enrollmentId, Guid trainerId, string bearerToken, RejectEnrollmentRequest request)
         {
             var enrollment = await _enrollmentRepository.GetByIdAsync(enrollmentId)
                 ?? throw new KeyNotFoundException("Zahtev nije pronadjen.");
@@ -152,6 +163,19 @@ namespace TrainingManagementApplication.Services
             enrollment.RejectionReason = request.RejectionReason?.Trim();
 
             await _enrollmentRepository.UpdateAsync(enrollment);
+
+            // === NOTIFIKACIJA ===
+            var reasonText = string.IsNullOrWhiteSpace(request.RejectionReason)
+                ? ""
+                : $" Razlog: {request.RejectionReason}";
+
+            await _notificationClient.SendNotificationAsync(
+                userId: enrollment.ClientId,
+                title: "Zahtev odbijen",
+                content: $"Vas zahtev za plan \"{enrollment.TrainingPlan.Title}\" je odbijen.{reasonText}",
+                type: 2,  // Warning
+                bearerToken: bearerToken);
+
             return MapToResponse(enrollment);
         }
 

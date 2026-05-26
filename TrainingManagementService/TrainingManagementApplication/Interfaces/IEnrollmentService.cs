@@ -19,8 +19,8 @@ namespace TrainingManagementApplication.Interfaces
         // Trener
         Task<IEnumerable<EnrollmentResponse>> GetEnrollmentsForMyPlansAsync(Guid trainerId, EnrollmentStatus? status);
         Task<IEnumerable<EnrollmentResponse>> GetEnrollmentsByPlanAsync(Guid planId, Guid trainerId, EnrollmentStatus? status);
-        Task<EnrollmentResponse> ApproveAsync(Guid enrollmentId, Guid trainerId);
-        Task<EnrollmentResponse> RejectAsync(Guid enrollmentId, Guid trainerId, RejectEnrollmentRequest request);
+        Task<EnrollmentResponse> ApproveAsync(Guid enrollmentId, Guid trainerId, string bearerToken);
+        Task<EnrollmentResponse> RejectAsync(Guid enrollmentId, Guid trainerId, string bearerToken, RejectEnrollmentRequest request);
         Task RemoveClientFromPlanAsync(Guid enrollmentId, Guid trainerId);
     }
 }
