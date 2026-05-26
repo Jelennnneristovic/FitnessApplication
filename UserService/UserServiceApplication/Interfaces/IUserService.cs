@@ -18,5 +18,7 @@ namespace UserServiceApplication.Interfaces
         Task<UserDetailsDTO> UpdateAsync(Guid userId, UpdateUserRequest request);
         Task<TrainerProfileResponse> GetTrainerProfileAsync(Guid userId);
         Task<TrainerProfileResponse> UpdateTrainerProfileAsync(Guid userId, UpdateTrainerProfileRequest request);
+
+        Task<IEnumerable<TrainerSearchResponse>> SearchTrainersAsync(TrainerSearchRequest request);
     }
 }

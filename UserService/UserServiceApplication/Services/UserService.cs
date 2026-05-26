@@ -232,6 +232,31 @@ namespace UserServiceApplication.Services
                 Description = profile.Description,
                 UpdatedAt = profile.UpdatedAt
             };
+
+        }
+
+        public async Task<IEnumerable<TrainerSearchResponse>> SearchTrainersAsync(TrainerSearchRequest request)
+        {
+            var results = await _userRepository.SearchTrainersAsync(
+                request.Keyword,
+                request.Specialization,
+                request.MinRating,
+                request.SortBy);
+
+            return results.Select(r => new TrainerSearchResponse
+            {
+                Id = r.user.Id,
+                Username = r.user.Username,
+                FirstName = r.user.FirstName,
+                LastName = r.user.LastName,
+                Location = r.user.Location,
+                ProfileImageUrl = r.user.ProfileImageUrl,
+                Specialization = r.profile?.Specialization,
+                YearsOfExperience = r.profile?.YearsOfExperience,
+                Description = r.profile?.Description,
+                AverageRating = r.avgRating,
+                TotalReviews = r.reviewCount
+            });
         }
     }
 }

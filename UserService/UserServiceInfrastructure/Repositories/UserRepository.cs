@@ -95,5 +95,67 @@ namespace UserServiceInfrastructure.Repositories
             await _context.SaveChangesAsync();
         }
 
+        public async Task<IEnumerable<(User user, TrainerProfile? profile, double avgRating, int reviewCount)>>
+    SearchTrainersAsync(string? keyword, string? specialization, double? minRating, string? sortBy)
+        {
+            // Polazi od svih aktivnih trenera, sa profilom
+            var query = _context.Users
+                .Where(u => u.Role == UserRole.Trainer && u.Status == UserStatus.Active)
+                .Select(u => new
+                {
+                    User = u,
+                    Profile = _context.TrainerProfiles.FirstOrDefault(p => p.UserId == u.Id),
+                    AvgRating = _context.TrainerReviews
+                        .Where(r => r.TrainerId == u.Id)
+                        .Select(r => (double?)r.Rating)
+                        .Average() ?? 0,
+                    ReviewCount = _context.TrainerReviews.Count(r => r.TrainerId == u.Id)
+                });
+
+            // Filter: keyword (ime, prezime, username)
+            if (!string.IsNullOrWhiteSpace(keyword))
+            {
+                var k = keyword.ToLower();
+                query = query.Where(x =>
+                    x.User.FirstName.ToLower().Contains(k) ||
+                    x.User.LastName.ToLower().Contains(k) ||
+                    x.User.Username.ToLower().Contains(k));
+            }
+
+            // Filter: specijalizacija
+            if (!string.IsNullOrWhiteSpace(specialization))
+            {
+                var s = specialization.ToLower();
+                query = query.Where(x =>
+                    x.Profile != null &&
+                    x.Profile.Specialization != null &&
+                    x.Profile.Specialization.ToLower().Contains(s));
+            }
+
+            // Filter: minimalna ocena
+            if (minRating.HasValue)
+            {
+                query = query.Where(x => x.AvgRating >= minRating.Value);
+            }
+
+            // Sortiranje
+            query = sortBy?.ToLower() switch
+            {
+                "rating" => query.OrderByDescending(x => x.AvgRating),
+                "experience" => query.OrderByDescending(x => x.Profile != null ? x.Profile.YearsOfExperience : 0),
+                "name" => query.OrderBy(x => x.User.FirstName),
+                _ => query.OrderByDescending(x => x.AvgRating)  // default: po oceni
+            };
+
+            var results = await query.ToListAsync();
+
+            return results.Select(x => (
+                x.User,
+                x.Profile,
+                Math.Round(x.AvgRating, 2),
+                x.ReviewCount
+            ));
+        }
+
     }
 }

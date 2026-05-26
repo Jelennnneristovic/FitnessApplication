@@ -226,6 +226,13 @@ namespace UserServiceAPI.Controllers
                 return BadRequest(new { message = ex.Message });
             }
         }
+
+        [HttpGet("trainers/search")]
+        public async Task<IActionResult> SearchTrainers([FromQuery] TrainerSearchRequest request)
+        {
+            var trainers = await _userService.SearchTrainersAsync(request);
+            return Ok(trainers);
+        }
     }
 }
 

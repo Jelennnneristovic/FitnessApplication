@@ -24,5 +24,9 @@ namespace UserServiceApplication.Interfaces
         Task<TrainerProfile?> GetTrainerProfileByUserIdAsync(Guid userId);
         Task AddTrainerProfileAsync(TrainerProfile profile);
         Task UpdateTrainerProfileAsync(TrainerProfile profile);
+
+
+        Task<IEnumerable<(User user, TrainerProfile? profile, double avgRating, int reviewCount)>>
+         SearchTrainersAsync(string? keyword, string? specialization, double? minRating, string? sortBy);
     }
 }
