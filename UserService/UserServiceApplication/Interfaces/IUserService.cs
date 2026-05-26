@@ -16,5 +16,7 @@ namespace UserServiceApplication.Interfaces
         Task<UserDTO> DeactivateAsync(Guid userId);
         Task<UserDetailsDTO> GetByIdAsync(Guid userId);
         Task<UserDetailsDTO> UpdateAsync(Guid userId, UpdateUserRequest request);
+        Task<TrainerProfileResponse> GetTrainerProfileAsync(Guid userId);
+        Task<TrainerProfileResponse> UpdateTrainerProfileAsync(Guid userId, UpdateTrainerProfileRequest request);
     }
 }

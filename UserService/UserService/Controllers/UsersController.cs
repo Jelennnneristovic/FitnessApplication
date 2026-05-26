@@ -16,16 +16,21 @@ namespace UserServiceAPI.Controllers
     {
         private readonly IUserService _userService;
 
-        private readonly AppDbContext _context; // Zameni sa tvojim imenom Context-a
+        private readonly AppDbContext _context; 
         private readonly IFileStorageService _fileStorageService;
 
+        private readonly ITrainingServiceClient _trainingServiceClient;
+
         public UsersController(IUserService userService, AppDbContext context,
-        IFileStorageService fileStorageService)
+        IFileStorageService fileStorageService, ITrainingServiceClient trainingServiceClient)  
         {
             _userService = userService;
             _context = context;
             _fileStorageService = fileStorageService;
+            _trainingServiceClient = trainingServiceClient;  
+
         }
+        
 
         [HttpGet("clients")]
         [Authorize(Roles = "Admin")]
@@ -168,6 +173,53 @@ namespace UserServiceAPI.Controllers
             catch (KeyNotFoundException ex)
             {
                 return NotFound(new { message = ex.Message });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        // Pregled trenerskog profila (svako ulogovan moze da vidi)
+        [HttpGet("{userId:guid}/trainer-profile")]
+        public async Task<IActionResult> GetTrainerProfile(Guid userId)
+        {
+            try
+            {
+                var profile = await _userService.GetTrainerProfileAsync(userId);
+                return Ok(profile);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        // Trener dopunjava SVOJ profil
+        [HttpPut("me/trainer-profile")]
+        [Authorize(Roles = "Trainer")]
+        public async Task<IActionResult> UpdateMyTrainerProfile([FromBody] UpdateTrainerProfileRequest request)
+        {
+            try
+            {
+                var userIdString = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                if (!Guid.TryParse(userIdString, out var userId))
+                    return Unauthorized();
+
+                var profile = await _userService.UpdateTrainerProfileAsync(userId, request);
+                return Ok(profile);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { message = ex.Message });
             }
             catch (ArgumentException ex)
             {

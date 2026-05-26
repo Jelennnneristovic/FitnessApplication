@@ -92,5 +92,15 @@ namespace TrainingManagementInfrastructure.Repositories
             _context.Enrollments.Update(enrollment);
             await _context.SaveChangesAsync();
         }
+
+        public async Task<bool> HasApprovedEnrollmentWithTrainerAsync(Guid clientId, Guid trainerId)
+        {
+            return await _context.Enrollments
+                .Include(e => e.TrainingPlan)
+                .AnyAsync(e =>
+                    e.ClientId == clientId &&
+                    e.Status == TrainingManagementDomain.Enums.EnrollmentStatus.Approved &&
+                    e.TrainingPlan.TrainerId == trainerId);
+        }
     }
 }

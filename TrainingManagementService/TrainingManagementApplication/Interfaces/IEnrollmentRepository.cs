@@ -18,5 +18,6 @@ namespace TrainingManagementApplication.Interfaces
         Task<int> CountApprovedByPlanAsync(Guid planId);
         Task AddAsync(Enrollment enrollment);
         Task UpdateAsync(Enrollment enrollment);
+        Task<bool> HasApprovedEnrollmentWithTrainerAsync(Guid clientId, Guid trainerId);
     }
 }

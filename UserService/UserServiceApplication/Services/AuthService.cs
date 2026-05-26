@@ -61,6 +61,21 @@ namespace UserServiceApplication.Services
 
             await _userRepository.AddAsync(user);
 
+            // Ako je trener, kreiraj prazan profil koji ce kasnije popuniti
+            if (user.Role == UserRole.Trainer)
+            {
+                var profile = new TrainerProfile
+                {
+                    Id = Guid.NewGuid(),
+                    UserId = user.Id,
+                    Specialization = null,
+                    YearsOfExperience = null,
+                    Description = null,
+                    UpdatedAt = null
+                };
+                await _userRepository.AddTrainerProfileAsync(profile);
+            }
+
             var token = _tokenService.GenerateToken(user);
             return new Auth
             {

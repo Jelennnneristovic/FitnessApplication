@@ -6,6 +6,7 @@ using System.Text;
 using UserServiceApplication.Interfaces;
 using UserServiceApplication.Services;
 using UserServiceInfrastructure.Data;
+using UserServiceInfrastructure.ExternalServices;
 using UserServiceInfrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,6 +20,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 // === Repozitorijumi ===
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
 
 
 // === Servisi ===
@@ -26,6 +28,7 @@ builder.Services.AddSingleton<ITokenService, TokenService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IFileStorageService, FileStorageService>();
+builder.Services.AddScoped<IReviewService, ReviewService>();
 
 // === JWT autentifikacija ===
 var jwtKey = builder.Configuration["Jwt:Key"]!;
@@ -49,6 +52,13 @@ builder.Services
     });
 
 builder.Services.AddAuthorization();
+
+// === HTTP Client za TrainingService ===
+builder.Services.AddHttpClient<ITrainingServiceClient, TrainingServiceClient>(client =>
+{
+    var trainingServiceUrl = builder.Configuration["Services:TrainingServiceUrl"]!;
+    client.BaseAddress = new Uri(trainingServiceUrl);
+});
 
 var app = builder.Build();
 

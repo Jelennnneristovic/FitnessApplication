@@ -25,7 +25,10 @@ namespace UserServiceDomain.Entities
 
         public DateTime RegistrationDate { get; set; }
         public string? ProfileImageUrl { get; set; }
-      
+
+        // Navigation - 1:1 sa trenerskim profilom (null za ne-trenere)
+        public TrainerProfile? TrainerProfile { get; set; }
+
 
 
     }

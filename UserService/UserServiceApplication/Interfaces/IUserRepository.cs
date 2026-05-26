@@ -18,5 +18,11 @@ namespace UserServiceApplication.Interfaces
         Task<IEnumerable<DomainUser>> GetByRoleAsync(UserRole role, string? keyword, UserStatus? status);
         Task AddAsync(DomainUser user);
         Task UpdateAsync(DomainUser user);
+
+
+        // Trainer profile
+        Task<TrainerProfile?> GetTrainerProfileByUserIdAsync(Guid userId);
+        Task AddTrainerProfileAsync(TrainerProfile profile);
+        Task UpdateTrainerProfileAsync(TrainerProfile profile);
     }
 }

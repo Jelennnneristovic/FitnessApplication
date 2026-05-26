@@ -76,5 +76,24 @@ namespace UserServiceInfrastructure.Repositories
             return await query.ToListAsync();
         }
 
+        public async Task<TrainerProfile?> GetTrainerProfileByUserIdAsync(Guid userId)
+        {
+            return await _context.TrainerProfiles
+                .Include(tp => tp.User)
+                .FirstOrDefaultAsync(tp => tp.UserId == userId);
+        }
+
+        public async Task AddTrainerProfileAsync(TrainerProfile profile)
+        {
+            await _context.TrainerProfiles.AddAsync(profile);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateTrainerProfileAsync(TrainerProfile profile)
+        {
+            _context.TrainerProfiles.Update(profile);
+            await _context.SaveChangesAsync();
+        }
+
     }
 }

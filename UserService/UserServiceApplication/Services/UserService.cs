@@ -159,6 +159,80 @@ namespace UserServiceApplication.Services
 
             return MapToDetailsDTO(user);
         }
+        public async Task<TrainerProfileResponse> GetTrainerProfileAsync(Guid userId)
+        {
+            var user = await _userRepository.GetByIdAsync(userId)
+                ?? throw new KeyNotFoundException("Korisnik nije pronadjen.");
+
+            if (user.Role != UserRole.Trainer)
+                throw new InvalidOperationException("Korisnik nije trener.");
+
+            var profile = await _userRepository.GetTrainerProfileByUserIdAsync(userId)
+                ?? throw new KeyNotFoundException("Trenerski profil nije pronadjen.");
+
+            return MapToProfileResponse(profile);
+        }
+
+        public async Task<TrainerProfileResponse> UpdateTrainerProfileAsync(Guid userId, UpdateTrainerProfileRequest request)
+        {
+            var user = await _userRepository.GetByIdAsync(userId)
+                ?? throw new KeyNotFoundException("Korisnik nije pronadjen.");
+
+            if (user.Role != UserRole.Trainer)
+                throw new InvalidOperationException("Samo treneri mogu imati profil.");
+
+            var profile = await _userRepository.GetTrainerProfileByUserIdAsync(userId);
+
+            // Ako profil ne postoji (npr. trener registrovan pre nego sto smo dodali ovu funkcionalnost), kreiraj ga
+            if (profile == null)
+            {
+                profile = new TrainerProfile
+                {
+                    Id = Guid.NewGuid(),
+                    UserId = userId
+                };
+                await _userRepository.AddTrainerProfileAsync(profile);
+            }
+
+            // Selektivne izmene
+            if (request.Specialization != null)
+                profile.Specialization = request.Specialization.Trim();
+
+            if (request.YearsOfExperience.HasValue)
+            {
+                if (request.YearsOfExperience.Value < 0 || request.YearsOfExperience.Value > 70)
+                    throw new ArgumentException("Godine iskustva moraju biti izmedju 0 i 70.");
+                profile.YearsOfExperience = request.YearsOfExperience.Value;
+            }
+
+            if (request.Description != null)
+                profile.Description = request.Description.Trim();
+
+            profile.UpdatedAt = DateTime.UtcNow;
+
+            await _userRepository.UpdateTrainerProfileAsync(profile);
+
+            // Reload sa User podacima za response
+            var updated = await _userRepository.GetTrainerProfileByUserIdAsync(userId);
+            return MapToProfileResponse(updated!);
+        }
+
+        private static TrainerProfileResponse MapToProfileResponse(TrainerProfile profile)
+        {
+            return new TrainerProfileResponse
+            {
+                Id = profile.Id,
+                UserId = profile.UserId,
+                Username = profile.User?.Username ?? string.Empty,
+                FirstName = profile.User?.FirstName ?? string.Empty,
+                LastName = profile.User?.LastName ?? string.Empty,
+                ProfileImageUrl = profile.User?.ProfileImageUrl,
+                Specialization = profile.Specialization,
+                YearsOfExperience = profile.YearsOfExperience,
+                Description = profile.Description,
+                UpdatedAt = profile.UpdatedAt
+            };
+        }
     }
 }
 

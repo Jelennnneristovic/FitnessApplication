@@ -17,7 +17,7 @@ namespace UserServiceInfrastructure.Data
                 return;
 
             // 1. Generišemo fiksni ID za admina da bi znali kako da nazovemo sliku
-            var adminId = Guid.NewGuid();
+            var adminId = Guid.Parse("5363D1BE-4EAB-4F74-8411-3C5E293C844C");
             var admin = new User
             {
                 Id = adminId,
@@ -41,16 +41,16 @@ namespace UserServiceInfrastructure.Data
 
 
 
-            var trenerMarkoId = Guid.NewGuid();
-            var trenerAnaId = Guid.NewGuid();
-            var trenerStefanId = Guid.NewGuid();
+            var trenerMarkoId = Guid.Parse("488D802E-F184-4B7B-8417-E5061B094842");
+            var trenerAnaId = Guid.Parse("83694D78-554F-464A-BC83-5ACB5C667F3F");
+            var trenerStefanId = Guid.Parse("E114B069-B5A8-4CDD-BE91-9419535C2BB6");
 
-            var jelenaId = Guid.NewGuid();
-            var nikolaId = Guid.NewGuid();
-            var milicaId = Guid.NewGuid();
-            var tamaraId = Guid.NewGuid();
-            var filipId = Guid.NewGuid();
-            var lukaId = Guid.NewGuid();
+            var jelenaId = Guid.Parse("B3513E0D-8453-4BBF-AD64-93DCF6D52618");
+            var nikolaId = Guid.Parse("5F7B946B-B6B8-42BB-B5E6-45DF9C68BE0D");
+            var milicaId = Guid.Parse("ADAA688B-DF82-4539-BD41-43C011087025");
+            var tamaraId = Guid.Parse("B84054D9-BD6C-4863-B0BD-A7C852AD2A48");
+            var filipId = Guid.Parse("DBEB7532-F91E-4894-9E7B-1A7A305C7C04");
+            var lukaId = Guid.Parse("DDA14DC0-B253-404E-8CCA-12AEA1180795");
 
 
 
@@ -216,6 +216,45 @@ namespace UserServiceInfrastructure.Data
 
             await context.Users.AddRangeAsync(users);
             await context.SaveChangesAsync();
+
+
+            // === TRENERSKI PROFILI ===
+            var trainerProfiles = new List<TrainerProfile>
+            {
+                new TrainerProfile
+                {
+                    Id = Guid.NewGuid(),
+                    UserId = trenerMarkoId,
+                    Specialization = "Kardio, Mrsavljenje",
+                    YearsOfExperience = 8,
+                    Description = "Specijalizovan za kardio treninge i programe za mrsavljenje. Pomazem klijentima da postignu svoje ciljeve.",
+                    UpdatedAt = DateTime.UtcNow.AddDays(-30)
+                },
+                new TrainerProfile
+                {
+                    Id = Guid.NewGuid(),
+                    UserId = trenerAnaId,
+                    Specialization = "Joga, Pilates",
+                    YearsOfExperience = 6,
+                    Description = "Sertifikovani joga i pilates instruktor sa fokusom na fleksibilnost i mentalnu opustenost.",
+                    UpdatedAt = DateTime.UtcNow.AddDays(-20)
+                },
+                new TrainerProfile
+                {
+                    Id = Guid.NewGuid(),
+                    UserId = trenerStefanId,
+                    // Stefan je PendingApproval - prazan profil (jos nije popunio)
+                    Specialization = null,
+                    YearsOfExperience = null,
+                    Description = null,
+                    UpdatedAt = null
+                }
+            };
+
+            await context.TrainerProfiles.AddRangeAsync(trainerProfiles);
+            await context.SaveChangesAsync();
         }
     }
 }
+
+        
