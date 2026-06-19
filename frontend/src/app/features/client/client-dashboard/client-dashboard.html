@@ -1,0 +1,15 @@
+<div class="dashboard">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Klijent Panel</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <p>Dobrodosli, {{ user()?.firstName }} {{ user()?.lastName }}!</p>
+      <p>Uloga: Klijent</p>
+      <p>Ovde ce biti: pretraga trenera, planovi, notifikacije...</p>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-raised-button color="warn" (click)="logout()">Odjavi se</button>
+    </mat-card-actions>
+  </mat-card>
+</div>

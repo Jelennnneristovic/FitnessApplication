@@ -1,0 +1,58 @@
+<div class="login-container">
+  <mat-card class="login-card">
+    <mat-card-header>
+      <mat-card-title>Prijava</mat-card-title>
+      <mat-card-subtitle>Dobrodosli nazad</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+
+        <!-- Username -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Korisnicko ime</mat-label>
+          <input matInput formControlName="username" placeholder="npr. admin">
+          @if (loginForm.get('username')?.hasError('required') && loginForm.get('username')?.touched) {
+            <mat-error>Korisnicko ime je obavezno</mat-error>
+          }
+        </mat-form-field>
+
+        <!-- Password -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Lozinka</mat-label>
+          <input matInput type="password" formControlName="password">
+          @if (loginForm.get('password')?.hasError('required') && loginForm.get('password')?.touched) {
+            <mat-error>Lozinka je obavezna</mat-error>
+          }
+        </mat-form-field>
+
+        <!-- Greska sa servera -->
+        @if (errorMessage()) {
+          <div class="error-box">
+            {{ errorMessage() }}
+          </div>
+        }
+
+        <!-- Dugme -->
+        <button
+          mat-raised-button
+          color="primary"
+          type="submit"
+          class="full-width submit-btn"
+          [disabled]="loading()">
+          @if (loading()) {
+            <mat-spinner diameter="20"></mat-spinner>
+          } @else {
+            Prijavi se
+          }
+        </button>
+
+      </form>
+    </mat-card-content>
+
+    <mat-card-actions class="register-link">
+      <span>Nemas nalog?</span>
+      <a mat-button routerLink="/register">Registruj se</a>
+    </mat-card-actions>
+  </mat-card>
+</div>
