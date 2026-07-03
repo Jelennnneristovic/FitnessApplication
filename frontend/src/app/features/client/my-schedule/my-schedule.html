@@ -1,0 +1,58 @@
+<mat-toolbar color="primary" class="toolbar">
+  <button mat-button (click)="goBack()">← Nazad</button>
+  <span class="title">Moj raspored</span>
+</mat-toolbar>
+
+<div class="content">
+  @if (loading()) {
+    <div class="loading"><mat-spinner diameter="40"></mat-spinner></div>
+  } @else {
+    @if (sessions().length === 0) {
+      <p class="empty">
+        Nemate zakazanih treninga. Prijavite se na plan i sacekajte odobrenje trenera.
+      </p>
+    } @else {
+      <div class="sessions-list">
+        @for (session of sessions(); track session.id) {
+          <mat-card class="session-card" [class.past]="isPast(session)">
+            <mat-card-content>
+              <div class="session-header">
+                <span class="plan-title">{{ session.trainingPlanTitle }}</span>
+                <span class="status-badge" [class]="statusClass(session.status)">
+                  {{ statusLabel(session.status) }}
+                </span>
+              </div>
+
+              <p class="session-date">
+                {{ session.startTime | date:'EEEE, dd.MM.yyyy.' }}
+              </p>
+
+              <p class="session-hours">
+                {{ session.startTime | date:'HH:mm' }} - {{ session.endTime | date:'HH:mm' }}
+              </p>
+
+              @if (session.notes) {
+                <p class="session-notes">{{ session.notes }}</p>
+              }
+
+              <!-- Prisustvo -->
+              @if (getAttendance(session.id); as att) {
+                <div class="attendance-info" [class.present]="att.attended" [class.absent]="!att.attended">
+                  @if (att.attended) {
+                    ✓ Bili ste prisutni
+                  } @else {
+                    ✗ Niste bili prisutni
+                  }
+                </div>
+              } @else if (isPast(session)) {
+                <div class="attendance-info not-marked">
+                  Prisustvo nije evidentirano
+                </div>
+              }
+            </mat-card-content>
+          </mat-card>
+        }
+      </div>
+    }
+  }
+</div>

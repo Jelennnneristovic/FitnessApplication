@@ -1,0 +1,98 @@
+<mat-toolbar color="primary" class="toolbar">
+  <button mat-button (click)="cancel()">← Nazad</button>
+  <span class="title">{{ isEditMode() ? 'Izmeni plan' : 'Novi plan' }}</span>
+</mat-toolbar>
+
+<div class="content">
+  @if (loading()) {
+    <div class="loading"><mat-spinner diameter="40"></mat-spinner></div>
+  } @else {
+    <mat-card class="form-card">
+      <mat-card-content>
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Naziv plana</mat-label>
+            <input matInput formControlName="title">
+            @if (form.get('title')?.hasError('required') && form.get('title')?.touched) {
+              <mat-error>Naziv je obavezan</mat-error>
+            }
+            @if (form.get('title')?.hasError('minlength')) {
+              <mat-error>Minimum 3 karaktera</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Opis</mat-label>
+            <textarea matInput formControlName="description" rows="3"></textarea>
+            @if (form.get('description')?.hasError('required') && form.get('description')?.touched) {
+              <mat-error>Opis je obavezan</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Kategorija</mat-label>
+            <mat-select formControlName="categoryId">
+              @for (cat of categories(); track cat.id) {
+                <mat-option [value]="cat.id">{{ cat.name }}</mat-option>
+              }
+            </mat-select>
+            @if (form.get('categoryId')?.hasError('required') && form.get('categoryId')?.touched) {
+              <mat-error>Izaberite kategoriju</mat-error>
+            }
+          </mat-form-field>
+
+          <div class="row">
+            <mat-form-field appearance="outline" class="half">
+              <mat-label>Tip</mat-label>
+              <mat-select formControlName="type">
+                <mat-option [value]="TrainingType.Individual">Individualni</mat-option>
+                <mat-option [value]="TrainingType.Group">Grupni</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="half">
+              <mat-label>Cena (RSD)</mat-label>
+              <input matInput type="number" formControlName="price">
+              @if (form.get('price')?.hasError('min')) {
+                <mat-error>Cena ne moze biti negativna</mat-error>
+              }
+            </mat-form-field>
+          </div>
+
+          <div class="row">
+            <mat-form-field appearance="outline" class="half">
+              <mat-label>Max ucesnika</mat-label>
+              <input matInput type="number" formControlName="maxParticipants">
+              @if (form.get('maxParticipants')?.hasError('min')) {
+                <mat-error>Minimum 1</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="half">
+              <mat-label>Trajanje (min)</mat-label>
+              <input matInput type="number" formControlName="durationMinutes">
+              @if (form.get('durationMinutes')?.hasError('min')) {
+                <mat-error>Minimum 15 min</mat-error>
+              }
+            </mat-form-field>
+          </div>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Lokacija (opciono)</mat-label>
+            <input matInput formControlName="location">
+          </mat-form-field>
+
+          <div class="form-actions">
+            <button mat-button type="button" (click)="cancel()">Otkazi</button>
+            <button mat-raised-button color="primary" type="submit" [disabled]="saving()">
+              @if (saving()) { Cuvanje... }
+              @else { {{ isEditMode() ? 'Sacuvaj izmene' : 'Kreiraj plan' }} }
+            </button>
+          </div>
+
+        </form>
+      </mat-card-content>
+    </mat-card>
+  }
+</div>

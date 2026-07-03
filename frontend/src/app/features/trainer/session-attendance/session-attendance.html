@@ -1,0 +1,65 @@
+<mat-toolbar color="primary" class="toolbar">
+  <button mat-button (click)="goBack()">← Nazad</button>
+  <span class="title">Prisustvo</span>
+</mat-toolbar>
+
+<div class="content">
+  @if (loading()) {
+    <div class="loading"><mat-spinner diameter="40"></mat-spinner></div>
+  } @else {
+
+    <!-- Info o sesiji -->
+    @if (session(); as s) {
+      <mat-card class="session-info">
+        <mat-card-content>
+          <h3>{{ s.trainingPlanTitle }}</h3>
+          <p>{{ s.startTime | date:'EEEE, dd.MM.yyyy.' }} · {{ s.startTime | date:'HH:mm' }} - {{ s.endTime | date:'HH:mm' }}</p>
+        </mat-card-content>
+      </mat-card>
+    }
+
+    <h2 class="section-title">Prijavljeni klijenti</h2>
+
+    @if (approvedClients().length === 0) {
+      <p class="empty">Nema odobrenih klijenata za ovaj plan.</p>
+    } @else {
+      <div class="clients-list">
+        @for (client of approvedClients(); track client.id) {
+          <mat-card class="client-card">
+            <mat-card-content>
+              <div class="client-row">
+                <div class="client-info">
+                  <span class="client-id">Klijent {{ shortId(client.clientId) }}</span>
+                  @if (getAttendance(client.clientId); as att) {
+                    <span class="attendance-status" [class.present]="att.attended" [class.absent]="!att.attended">
+                      {{ att.attended ? '✓ Prisutan' : '✗ Odsutan' }}
+                    </span>
+                  } @else {
+                    <span class="attendance-status not-marked">Nije oznaceno</span>
+                  }
+                </div>
+
+                <div class="client-actions">
+                  <button
+                    mat-raised-button
+                    [color]="getAttendance(client.clientId)?.attended ? 'primary' : ''"
+                    (click)="mark(client.clientId, true)"
+                    [disabled]="processingClientId() === client.clientId">
+                    Bio
+                  </button>
+                  <button
+                    mat-stroked-button
+                    color="warn"
+                    (click)="mark(client.clientId, false)"
+                    [disabled]="processingClientId() === client.clientId">
+                    Nije bio
+                  </button>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        }
+      </div>
+    }
+  }
+</div>

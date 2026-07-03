@@ -54,7 +54,10 @@ namespace TrainingManagementInfrastructure.Repositories
 
         public async Task DeleteAsync(Category category)
         {
-            _context.Categories.Remove(category);
+            // Soft delete - ne brisemo red, samo deaktiviramo
+            category.IsActive = false;
+            category.UpdatedAt = DateTime.UtcNow;
+            _context.Categories.Update(category);
             await _context.SaveChangesAsync();
         }
     }

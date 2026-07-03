@@ -1,15 +1,53 @@
-<div class="dashboard">
-  <mat-card>
+<mat-toolbar color="primary" class="toolbar">
+  <span class="app-title">Fitness Aplikacija</span>
+  <span class="spacer"></span>
+  <span class="user-greeting">Zdravo, {{ user()?.firstName }} {{ user()?.lastName }}</span>
+  <app-notification-bell mode="requests"></app-notification-bell>
+  <button mat-button (click)="logout()">Odjavi se</button>
+</mat-toolbar>
+
+<div class="dashboard-content">
+  <h2 class="section-title">Trener Panel</h2>
+  <div class="nav-cards">
+
+    <mat-card class="nav-card" routerLink="/trainer/enrollments">
+      <mat-card-header>
+        <mat-card-title>Zahtevi</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p>Pregled i odobravanje zahteva za vase planove treninga.</p>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-button color="primary">Otvori</button>
+      </mat-card-actions>
+    </mat-card>
+
+
+    <mat-card class="nav-card" routerLink="/trainer/plans">
+      <mat-card-header>
+        <mat-card-title>Moji planovi</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p>Kreiranje, izmena i brisanje vasih planova treninga.</p>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-button color="primary">Otvori</button>
+      </mat-card-actions>
+    </mat-card>
+
+    <mat-card class="nav-card" routerLink="/trainer/profile">
     <mat-card-header>
-      <mat-card-title>Trener Panel</mat-card-title>
+      <mat-card-title>Moj profil</mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      <p>Dobrodosli, {{ user()?.firstName }} {{ user()?.lastName }}!</p>
-      <p>Uloga: Trener</p>
-      <p>Ovde ce biti: moji planovi, zahtevi, profil...</p>
+      <p>Popunite specijalizaciju, iskustvo i opis koje klijenti vide.</p>
     </mat-card-content>
     <mat-card-actions>
-      <button mat-raised-button color="warn" (click)="logout()">Odjavi se</button>
+      <button mat-button color="primary">Otvori</button>
     </mat-card-actions>
   </mat-card>
+
+    <!-- Ovde ce kasnije: Moji planovi, Profil, Sesije -->
+
+  </div>
 </div>

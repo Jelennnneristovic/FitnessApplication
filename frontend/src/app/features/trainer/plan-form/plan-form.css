@@ -1,0 +1,35 @@
+.toolbar { position: sticky; top: 0; z-index: 100; }
+.toolbar .title { margin-left: 12px; font-size: 20px; }
+
+.content {
+  padding: 24px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.loading { display: flex; justify-content: center; padding: 40px; }
+
+.form-card {
+  padding: 16px;
+}
+
+.full-width {
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+.row {
+  display: flex;
+  gap: 12px;
+}
+
+.half {
+  flex: 1;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 16px;
+}

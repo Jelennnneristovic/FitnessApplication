@@ -1,15 +1,51 @@
-<div class="dashboard">
-  <mat-card>
-    <mat-card-header>
-      <mat-card-title>Admin Panel</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-      <p>Dobrodosli, {{ user()?.firstName }} {{ user()?.lastName }}!</p>
-      <p>Uloga: Administrator</p>
-      <p>Ovde ce biti: upravljanje korisnicima, kategorijama...</p>
-    </mat-card-content>
-    <mat-card-actions>
-      <button mat-raised-button color="warn" (click)="logout()">Odjavi se</button>
-    </mat-card-actions>
-  </mat-card>
+<!-- Gornji toolbar -->
+<mat-toolbar color="primary" class="toolbar">
+  <span class="app-title">Fitness Admin Panel</span>
+  <span class="spacer"></span>
+  <span class="user-greeting">Zdravo, {{ user()?.firstName }} {{ user()?.lastName }}</span>
+  <button mat-button (click)="logout()">Odjavi se</button>
+</mat-toolbar>
+
+<div class="dashboard-content">
+
+  <h2 class="section-title">Upravljanje</h2>
+  <div class="nav-cards">
+
+    <mat-card class="nav-card" routerLink="/admin/clients">
+      <mat-card-header>
+        <mat-card-title>Klijenti</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p>Pregled svih klijenata, aktivacija i deaktivacija naloga.</p>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-button color="primary">Otvori</button>
+      </mat-card-actions>
+    </mat-card>
+
+    <mat-card class="nav-card" routerLink="/admin/trainers">
+      <mat-card-header>
+        <mat-card-title>Treneri</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p>Pregled trenera, odobravanje novih i upravljanje nalozima.</p>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-button color="primary">Otvori</button>
+      </mat-card-actions>
+    </mat-card>
+
+    <mat-card class="nav-card" routerLink="/admin/categories">
+      <mat-card-header>
+        <mat-card-title>Kategorije</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p>Dodavanje, izmena i brisanje kategorija treninga.</p>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-button color="primary">Otvori</button>
+      </mat-card-actions>
+    </mat-card>
+
+  </div>
 </div>

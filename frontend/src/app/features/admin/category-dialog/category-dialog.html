@@ -1,0 +1,28 @@
+<h2 mat-dialog-title>{{ isEditMode ? 'Izmeni kategoriju' : 'Nova kategorija' }}</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="form">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Naziv</mat-label>
+      <input matInput formControlName="name">
+      @if (form.get('name')?.hasError('required') && form.get('name')?.touched) {
+        <mat-error>Naziv je obavezan</mat-error>
+      }
+      @if (form.get('name')?.hasError('minlength')) {
+        <mat-error>Minimum 2 karaktera</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Opis</mat-label>
+      <textarea matInput formControlName="description" rows="3"></textarea>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Otkazi</button>
+  <button mat-raised-button color="primary" (click)="onSave()">
+    {{ isEditMode ? 'Sacuvaj' : 'Kreiraj' }}
+  </button>
+</mat-dialog-actions>

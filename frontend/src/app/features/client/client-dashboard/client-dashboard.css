@@ -1,5 +1,54 @@
-.dashboard {
-  padding: 40px;
-  max-width: 800px;
+.toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.app-title {
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.user-greeting {
+  margin-right: 16px;
+  font-size: 14px;
+}
+
+.dashboard-content {
+  padding: 32px;
+  max-width: 1100px;
   margin: 0 auto;
+}
+
+.section-title {
+  font-size: 22px;
+  font-weight: 500;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.nav-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.nav-card {
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.nav-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.nav-card mat-card-content p {
+  color: #666;
+  line-height: 1.5;
+  min-height: 48px;
 }

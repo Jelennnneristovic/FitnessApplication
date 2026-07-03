@@ -1,15 +1,63 @@
-<div class="dashboard">
-  <mat-card>
-    <mat-card-header>
-      <mat-card-title>Klijent Panel</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-      <p>Dobrodosli, {{ user()?.firstName }} {{ user()?.lastName }}!</p>
-      <p>Uloga: Klijent</p>
-      <p>Ovde ce biti: pretraga trenera, planovi, notifikacije...</p>
-    </mat-card-content>
-    <mat-card-actions>
-      <button mat-raised-button color="warn" (click)="logout()">Odjavi se</button>
-    </mat-card-actions>
-  </mat-card>
+<mat-toolbar color="primary" class="toolbar">
+  <span class="app-title">Fitness Aplikacija</span>
+  <span class="spacer"></span>
+  <span class="user-greeting">Zdravo, {{ user()?.firstName }} {{ user()?.lastName }}</span>
+  <app-notification-bell></app-notification-bell>
+  <button mat-button (click)="logout()">Odjavi se</button>
+</mat-toolbar>
+
+<div class="dashboard-content">
+  <h2 class="section-title">Dobrodosli</h2>
+
+  <div class="nav-cards">
+
+    <mat-card class="nav-card" routerLink="/client/trainers">
+      <mat-card-header>
+        <mat-card-title>Pronadji trenera</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p>Pretrazi trenere po oceni, specijalizaciji i iskustvu.</p>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-button color="primary">Otvori</button>
+      </mat-card-actions>
+    </mat-card>
+
+    <mat-card class="nav-card" routerLink="/client/enrollments">
+      <mat-card-header>
+        <mat-card-title>Moji zahtevi</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p>Pregled statusa vasih prijava na planove treninga.</p>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-button color="primary">Otvori</button>
+      </mat-card-actions>
+    </mat-card>
+
+    <mat-card class="nav-card" routerLink="/notifications">
+      <mat-card-header>
+        <mat-card-title>Notifikacije</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p>Pregled obavestenja o vasim zahtevima i aktivnostima.</p>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-button color="primary">Otvori</button>
+      </mat-card-actions>
+    </mat-card>
+
+    <mat-card class="nav-card" routerLink="/client/schedule">
+      <mat-card-header>
+        <mat-card-title>Moj raspored</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p>Pregled termina treninga za planove na koje ste primljeni.</p>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-button color="primary">Otvori</button>
+      </mat-card-actions>
+    </mat-card>
+
+  </div>
 </div>

@@ -1,0 +1,97 @@
+.toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.toolbar .title {
+  margin-left: 12px;
+  font-size: 20px;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.content {
+  padding: 24px;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  padding: 40px;
+}
+
+.empty {
+  text-align: center;
+  color: #888;
+  padding: 40px;
+}
+
+.notifications-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.notification-card {
+  cursor: pointer;
+  border-left: 4px solid #ccc;
+  transition: box-shadow 0.2s;
+}
+
+.notification-card:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+
+/* Nepročitane - blago istaknute */
+.notification-card.unread {
+  background-color: #f3f8ff;
+}
+
+/* Boja leve ivice po tipu */
+.notification-card.type-success {
+  border-left-color: #2e7d32;
+}
+
+.notification-card.type-warning {
+  border-left-color: #f57f17;
+}
+
+.notification-card.type-info {
+  border-left-color: #1976d2;
+}
+
+.notification-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.notification-title {
+  font-weight: 600;
+  color: #333;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.unread-dot {
+  color: #1976d2;
+  font-size: 12px;
+}
+
+.notification-date {
+  font-size: 12px;
+  color: #999;
+}
+
+.notification-content {
+  color: #555;
+  line-height: 1.5;
+  margin: 0;
+}

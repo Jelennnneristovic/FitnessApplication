@@ -1,0 +1,13 @@
+mat-dialog-content {
+  min-width: 400px;
+  padding-top: 10px;
+}
+
+.plan-info {
+  margin-bottom: 16px;
+  color: #555;
+}
+
+.full-width {
+  width: 100%;
+}

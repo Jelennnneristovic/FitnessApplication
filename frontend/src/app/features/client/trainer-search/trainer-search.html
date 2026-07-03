@@ -1,0 +1,104 @@
+<mat-toolbar color="primary" class="toolbar">
+  <button mat-button (click)="goBack()">← Nazad</button>
+  <span class="title">Pronadji trenera</span>
+</mat-toolbar>
+
+<div class="content">
+
+  <!-- Filteri -->
+  <mat-card class="filters-card">
+    <div class="filters">
+      <mat-form-field appearance="outline">
+        <mat-label>Pretraga (ime)</mat-label>
+        <input matInput [(ngModel)]="keyword" (keyup.enter)="search()" placeholder="npr. Marko">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Specijalizacija</mat-label>
+        <input matInput [(ngModel)]="specialization" (keyup.enter)="search()" placeholder="npr. Joga">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Min. ocena</mat-label>
+        <mat-select [(ngModel)]="minRating">
+          <mat-option [value]="null">Sve</mat-option>
+          <mat-option [value]="1">1+</mat-option>
+          <mat-option [value]="2">2+</mat-option>
+          <mat-option [value]="3">3+</mat-option>
+          <mat-option [value]="4">4+</mat-option>
+          <mat-option [value]="5">5</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Sortiraj</mat-label>
+        <mat-select [(ngModel)]="sortBy">
+          <mat-option value="rating">Po oceni</mat-option>
+          <mat-option value="experience">Po iskustvu</mat-option>
+          <mat-option value="name">Po imenu</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <button mat-raised-button color="primary" (click)="search()">Pretrazi</button>
+      <button mat-button (click)="clearFilters()">Ocisti</button>
+    </div>
+  </mat-card>
+
+  <!-- Rezultati -->
+  @if (loading()) {
+    <div class="loading"><mat-spinner diameter="40"></mat-spinner></div>
+  } @else {
+    @if (trainers().length === 0) {
+      <p class="empty">Nema trenera za zadate kriterijume.</p>
+    } @else {
+      <div class="trainers-grid">
+        @for (trainer of trainers(); track trainer.id) {
+          <mat-card class="trainer-card">
+            <mat-card-header>
+              <mat-card-title>{{ trainer.firstName }} {{ trainer.lastName }}</mat-card-title>
+              <mat-card-subtitle>{{ trainer.location }}</mat-card-subtitle>
+            </mat-card-header>
+
+            <mat-card-content>
+              <!-- Ocena -->
+            <div class="rating">
+            @if (trainer.totalReviews > 0) {
+                @for (star of getStars(trainer.averageRating); track $index) {
+                <span class="star" [class]="star">
+                    @if (star === 'full') { ★ }
+                    @else if (star === 'half') { ⯪ }
+                    @else { ☆ }
+                </span>
+                }
+                <span class="rating-text">{{ trainer.averageRating }} ({{ trainer.totalReviews }})</span>
+            } @else {
+                <span class="no-rating">Nema ocena</span>
+            }
+            </div>
+              <!-- Specijalizacija -->
+              @if (trainer.specialization) {
+                <p class="spec"><strong>Specijalizacija:</strong> {{ trainer.specialization }}</p>
+              } @else {
+                <p class="spec muted">Bez specijalizacije</p>
+              }
+
+              <!-- Iskustvo -->
+              @if (trainer.yearsOfExperience != null) {
+                <p class="exp">{{ trainer.yearsOfExperience }} god. iskustva</p>
+              }
+
+              <!-- Opis (skracen) -->
+              @if (trainer.description) {
+                <p class="desc">{{ trainer.description }}</p>
+              }
+            </mat-card-content>
+
+            <mat-card-actions>
+              <button mat-button color="primary" (click)="viewProfile(trainer.id)">Pogledaj profil</button>
+            </mat-card-actions>
+          </mat-card>
+        }
+      </div>
+    }
+  }
+</div>

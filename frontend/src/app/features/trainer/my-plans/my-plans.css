@@ -1,0 +1,70 @@
+.toolbar { position: sticky; top: 0; z-index: 100; }
+.toolbar .title { margin-left: 12px; font-size: 20px; }
+.spacer { flex: 1 1 auto; }
+
+.content {
+  padding: 24px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.loading { display: flex; justify-content: center; padding: 40px; }
+.empty { text-align: center; color: #888; padding: 40px; }
+
+.plans-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.plan-desc {
+  color: #666;
+  font-size: 14px;
+  line-height: 1.4;
+  margin-bottom: 12px;
+}
+
+.archived {
+  color: #999;
+  font-style: italic;
+}
+
+.plan-info {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.info-chip {
+  background-color: #f0f0f0;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  color: #555;
+}
+
+.plan-location {
+  font-size: 13px;
+  color: #777;
+  margin: 8px 0;
+}
+
+.plan-price {
+  font-size: 22px;
+  font-weight: 700;
+  color: #2e7d32;
+  margin-top: 12px;
+}
+.plan-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.plan-actions {
+  display: flex;
+  gap: 8px;
+  padding: 8px 16px 16px;
+  margin-top: auto;
+  flex-wrap: wrap;
+}

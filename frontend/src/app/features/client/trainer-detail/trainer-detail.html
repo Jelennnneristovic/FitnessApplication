@@ -1,0 +1,123 @@
+<mat-toolbar color="primary" class="toolbar">
+  <button mat-button (click)="goBack()">← Nazad</button>
+  <span class="title">Profil trenera</span>
+</mat-toolbar>
+
+<div class="content">
+  @if (loading()) {
+    <div class="loading"><mat-spinner diameter="40"></mat-spinner></div>
+  } @else {
+
+    <!-- Profil trenera -->
+    @if (trainer(); as t) {
+      <mat-card class="profile-card">
+        <mat-card-header>
+          <mat-card-title>{{ t.firstName }} {{ t.lastName }}</mat-card-title>
+          <mat-card-subtitle>{{ t.location }}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="rating">
+            @if (t.totalReviews > 0) {
+              <span class="rating-value">★ {{ t.averageRating }}</span>
+              <span class="rating-count">({{ t.totalReviews }} ocena)</span>
+            } @else {
+              <span class="no-rating">Nema ocena</span>
+            }
+          </div>
+
+          @if (t.specialization) {
+            <p><strong>Specijalizacija:</strong> {{ t.specialization }}</p>
+          }
+          @if (t.yearsOfExperience != null) {
+            <p><strong>Iskustvo:</strong> {{ t.yearsOfExperience }} godina</p>
+          }
+          @if (t.description) {
+            <p class="description">{{ t.description }}</p>
+          }
+        </mat-card-content>
+      </mat-card>
+    }
+
+    <!-- Planovi trenera -->
+    <h2 class="section-title">Planovi treninga</h2>
+
+    @if (plans().length === 0) {
+      <p class="empty">Ovaj trener trenutno nema dostupnih planova.</p>
+    } @else {
+      <div class="plans-grid">
+        @for (plan of plans(); track plan.id) {
+          <mat-card class="plan-card">
+            <mat-card-header>
+              <mat-card-title>{{ plan.title }}</mat-card-title>
+              <mat-card-subtitle>{{ plan.categoryName }}</mat-card-subtitle>
+            </mat-card-header>
+
+            <mat-card-content>
+              <p class="plan-desc">{{ plan.description }}</p>
+
+              <div class="plan-info">
+                <span class="info-chip">{{ typeLabel(plan.type) }}</span>
+                <span class="info-chip">Trajanje: {{ plan.durationMinutes }} min</span>
+                <span class="info-chip">Br. ucesnika: {{ plan.maxParticipants }}</span>
+              </div>
+
+              @if (plan.location) {
+                <p class="plan-location">📍 {{ plan.location }}</p>
+              }
+
+              <div class="plan-price">{{ plan.price }} RSD</div>
+            </mat-card-content>
+
+            <mat-card-actions>
+              <button
+                mat-raised-button
+                color="primary"
+                (click)="enroll(plan)"
+                [disabled]="enrollingPlanId() === plan.id">
+                @if (enrollingPlanId() === plan.id) {
+                  Slanje...
+                } @else {
+                  Prijavi se
+                }
+              </button>
+            </mat-card-actions>
+          </mat-card>
+        }
+      </div>
+    }
+      <!-- Ocene -->
+    <div class="reviews-header">
+      <h2 class="section-title">Ocene i komentari</h2>
+      <button mat-raised-button color="accent" (click)="openReviewDialog()">
+        Oceni trenera
+      </button>
+    </div>
+
+    @if (reviews().length === 0) {
+      <p class="empty">Ovaj trener jos nema ocena. Budite prvi!</p>
+    } @else {
+      <div class="reviews-list">
+        @for (review of reviews(); track review.id) {
+          <mat-card class="review-card">
+            <mat-card-content>
+              <div class="review-header">
+                <span class="reviewer-name">
+                  {{ review.clientFirstName }} {{ review.clientLastName }}
+                </span>
+                <span class="review-stars">
+                  @for (filled of getStarsArray(review.rating); track $index) {
+                    <span class="star" [class.filled]="filled">★</span>
+                  }
+                </span>
+              </div>
+              @if (review.comment) {
+                <p class="review-comment">{{ review.comment }}</p>
+              }
+              <p class="review-date">{{ review.createdAt | date:'dd.MM.yyyy.' }}</p>
+            </mat-card-content>
+          </mat-card>
+        }
+      </div>
+    }
+  }
+</div>

@@ -1,0 +1,53 @@
+.toolbar { position: sticky; top: 0; z-index: 100; }
+.toolbar .title { margin-left: 12px; font-size: 20px; }
+
+.content {
+  padding: 24px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.loading { display: flex; justify-content: center; padding: 40px; }
+.empty { text-align: center; color: #888; padding: 40px; }
+
+.profile-card {
+  padding: 16px;
+}
+
+.info-row {
+  display: flex;
+  margin-bottom: 16px;
+  gap: 12px;
+}
+
+.label {
+  font-weight: 600;
+  color: #555;
+  min-width: 130px;
+}
+
+.value {
+  color: #333;
+  flex: 1;
+}
+
+.hint {
+  margin-top: 16px;
+  padding: 12px;
+  background-color: #fff8e1;
+  border-radius: 4px;
+  color: #f57f17;
+  font-size: 14px;
+}
+
+.full-width {
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 16px;
+}

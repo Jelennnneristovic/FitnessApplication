@@ -1,0 +1,10 @@
+<button
+  mat-icon-button
+  (click)="openTarget()"
+  [matBadge]="count()"
+  [matBadgeHidden]="count() === 0"
+  matBadgeColor="warn"
+  matBadgeSize="small"
+  aria-label="Obavestenja">
+  <mat-icon>notifications</mat-icon>
+</button>

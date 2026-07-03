@@ -1,0 +1,50 @@
+mat-dialog-content {
+  min-width: 400px;
+  padding-top: 10px;
+}
+
+.trainer-name {
+  font-size: 16px;
+  font-weight: 500;
+  color: #555;
+  margin-bottom: 16px;
+}
+
+.stars-input {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin: 20px 0 8px;
+}
+
+.star {
+  font-size: 40px;
+  color: #ddd;
+  cursor: pointer;
+  transition: color 0.15s, transform 0.15s;
+  user-select: none;
+}
+
+.star:hover {
+  transform: scale(1.15);
+}
+
+.star.filled {
+  color: #ffc107;
+}
+
+.rating-label {
+  text-align: center;
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.rating-label.hint {
+  color: #999;
+  font-style: italic;
+}
+
+.full-width {
+  width: 100%;
+}

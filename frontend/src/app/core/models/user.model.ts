@@ -26,3 +26,15 @@ export interface User {
   role: UserRole;
   status: UserStatus;
 }
+
+// Korisnik u listi (admin pregled) - sto vraca /api/users/clients i /trainers
+export interface UserListItem {
+  id: string;
+  username: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  role: UserRole;
+  status: UserStatus;
+  profileImageUrl?: string;
+}

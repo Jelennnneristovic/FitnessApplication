@@ -1,0 +1,91 @@
+.reviews-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 40px;
+  margin-bottom: 20px;
+}
+
+.reviews-header .section-title {
+  margin: 0;
+}
+
+.reviews-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.review-card {
+  background-color: #fafafa;
+}
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.reviewer-name {
+  font-weight: 600;
+  color: #333;
+}
+
+.review-stars .star {
+  color: #ddd;
+  font-size: 18px;
+}
+
+.review-stars .star.filled {
+  color: #ffc107;
+}
+
+.review-comment {
+  color: #555;
+  line-height: 1.5;
+  margin: 8px 0;
+}
+
+.review-date {
+  font-size: 12px;
+  color: #999;
+  margin: 0;
+}
+.plan-info {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.info-chip {
+  display: inline-block;
+  background-color: #eef1f5;
+  padding: 6px 12px;
+  border-radius: 16px;
+  font-size: 13px;
+  color: #444;
+  white-space: nowrap;
+}
+.plan-desc {
+  color: #666;
+  font-size: 14px;
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
+
+.plan-location {
+  font-size: 14px;
+  color: #666;
+  margin: 12px 0;
+}
+
+.plan-price {
+  font-size: 22px;
+  font-weight: 700;
+  color: #2e7d32;
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid #eee;
+}

@@ -1,0 +1,83 @@
+.toolbar { position: sticky; top: 0; z-index: 100; }
+.toolbar .title { margin-left: 12px; font-size: 18px; }
+.spacer { flex: 1 1 auto; }
+
+.content {
+  padding: 24px;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.loading { display: flex; justify-content: center; padding: 40px; }
+.empty { text-align: center; color: #888; padding: 40px; }
+
+.form-card {
+  margin-bottom: 24px;
+  padding: 16px;
+}
+
+.row { display: flex; gap: 12px; }
+.half { flex: 1; }
+.full-width { width: 100%; }
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+.sessions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.session-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.session-time {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  text-transform: capitalize;
+}
+
+.session-hours {
+  font-size: 15px;
+  color: #1976d2;
+  font-weight: 500;
+  margin: 4px 0;
+}
+
+.session-notes {
+  font-size: 14px;
+  color: #666;
+  margin-top: 8px;
+}
+
+.status-badge {
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 500;
+}
+.session-card {
+  transition: box-shadow 0.2s;
+}
+
+.session-card:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.session-actions {
+  display: flex;
+  gap: 8px;
+  padding: 8px 16px 16px;
+}
+.status-scheduled { background-color: #e3f2fd; color: #1565c0; }
+.status-completed { background-color: #e8f5e9; color: #2e7d32; }
+.status-cancelled { background-color: #ffebee; color: #c62828; }

@@ -1,0 +1,31 @@
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin: 12px 0;
+  min-height: 24px;   /* fiksna visina da kartice budu iste */
+}
+
+.star {
+  font-size: 20px;
+  color: #ffc107;
+  line-height: 1;
+  flex: 0 0 auto;     /* zvezdice se NE rastezu */
+}
+
+.star.empty {
+  color: #ddd;
+}
+
+.rating-text {
+  margin-left: 8px;
+  font-size: 14px;
+  color: #666;
+  white-space: nowrap;
+}
+
+.no-rating {
+  font-size: 14px;
+  color: #999;
+  font-style: italic;
+}

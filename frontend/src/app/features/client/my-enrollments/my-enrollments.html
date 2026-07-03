@@ -1,0 +1,59 @@
+<mat-toolbar color="primary" class="toolbar">
+  <button mat-button (click)="goBack()">← Nazad</button>
+  <span class="title">Moji zahtevi</span>
+</mat-toolbar>
+
+<div class="content">
+  @if (loading()) {
+    <div class="loading"><mat-spinner diameter="40"></mat-spinner></div>
+  } @else {
+    @if (enrollments().length === 0) {
+      <p class="empty">Nemate nijedan zahtev. Pronadjite trenera i prijavite se na plan!</p>
+    } @else {
+      <div class="enrollments-list">
+        @for (enrollment of enrollments(); track enrollment.id) {
+          <mat-card class="enrollment-card">
+            <mat-card-content>
+              <div class="enrollment-header">
+                <span class="plan-title">{{ enrollment.trainingPlanTitle }}</span>
+                <span class="status-badge" [class]="statusClass(enrollment.status)">
+                  {{ statusLabel(enrollment.status) }}
+                </span>
+              </div>
+
+              <p class="enrollment-date">
+                Poslato: {{ enrollment.requestedAt | date:'dd.MM.yyyy. HH:mm' }}
+              </p>
+
+              @if (enrollment.respondedAt) {
+                <p class="enrollment-date">
+                  Odgovor: {{ enrollment.respondedAt | date:'dd.MM.yyyy. HH:mm' }}
+                </p>
+              }
+
+              @if (enrollment.status === EnrollmentStatus.Rejected && enrollment.rejectionReason) {
+                <p class="rejection-reason">
+                  <strong>Razlog odbijanja:</strong> {{ enrollment.rejectionReason }}
+                </p>
+              }
+
+              @if (enrollment.clientNote) {
+                <p class="client-note">
+                  <strong>Vasa napomena:</strong> {{ enrollment.clientNote }}
+                </p>
+              }
+            </mat-card-content>
+
+            @if (enrollment.status === EnrollmentStatus.Pending) {
+              <mat-card-actions>
+                <button mat-button color="warn" (click)="cancelEnrollment(enrollment)">
+                  Otkazi zahtev
+                </button>
+              </mat-card-actions>
+            }
+          </mat-card>
+        }
+      </div>
+    }
+  }
+</div>

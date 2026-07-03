@@ -1,0 +1,85 @@
+<mat-toolbar color="primary" class="toolbar">
+  <button mat-button (click)="goBack()">← Nazad</button>
+  <span class="title">Moj profil</span>
+</mat-toolbar>
+
+<div class="content">
+  @if (loading()) {
+    <div class="loading"><mat-spinner diameter="40"></mat-spinner></div>
+  } @else if (profile(); as p) {
+
+    <!-- PRIKAZ -->
+    @if (!editMode()) {
+      <mat-card class="profile-card">
+        <mat-card-header>
+          <mat-card-title>{{ p.firstName }} {{ p.lastName }}</mat-card-title>
+          <mat-card-subtitle>{{ p.username }}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="info-row">
+            <span class="label">Specijalizacija:</span>
+            <span class="value">{{ p.specialization || 'Nije uneto' }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">Iskustvo:</span>
+            <span class="value">
+              {{ p.yearsOfExperience != null ? p.yearsOfExperience + ' godina' : 'Nije uneto' }}
+            </span>
+          </div>
+          <div class="info-row">
+            <span class="label">Opis:</span>
+            <span class="value">{{ p.description || 'Nije uneto' }}</span>
+          </div>
+
+          @if (!p.specialization && !p.description && p.yearsOfExperience == null) {
+            <p class="hint">Vas profil je prazan. Popunite ga da bi vas klijenti lakse pronasli!</p>
+          }
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-raised-button color="primary" (click)="startEdit()">Izmeni profil</button>
+        </mat-card-actions>
+      </mat-card>
+    }
+
+    <!-- IZMENA -->
+    @if (editMode()) {
+      <mat-card class="profile-card">
+        <mat-card-header>
+          <mat-card-title>Izmeni profil</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <form [formGroup]="form" (ngSubmit)="save()">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Specijalizacija</mat-label>
+              <input matInput formControlName="specialization" placeholder="npr. Kardio, Mrsavljenje">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Godine iskustva</mat-label>
+              <input matInput type="number" formControlName="yearsOfExperience">
+              @if (form.get('yearsOfExperience')?.hasError('min') || form.get('yearsOfExperience')?.hasError('max')) {
+                <mat-error>Iskustvo mora biti izmedju 0 i 70</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Opis</mat-label>
+              <textarea matInput formControlName="description" rows="4"
+                placeholder="Opisite svoj pristup, iskustvo i sta nudite klijentima..."></textarea>
+            </mat-form-field>
+
+            <div class="form-actions">
+              <button mat-button type="button" (click)="cancelEdit()">Otkazi</button>
+              <button mat-raised-button color="primary" type="submit" [disabled]="saving()">
+                @if (saving()) { Cuvanje... } @else { Sacuvaj }
+              </button>
+            </div>
+          </form>
+        </mat-card-content>
+      </mat-card>
+    }
+
+  } @else {
+    <p class="empty">Greska pri ucitavanju profila.</p>
+  }
+</div>

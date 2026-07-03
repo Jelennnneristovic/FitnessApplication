@@ -1,0 +1,43 @@
+<mat-toolbar color="primary" class="toolbar">
+  <button mat-button (click)="goBack()">← Nazad</button>
+  <span class="title">Notifikacije</span>
+  <span class="spacer"></span>
+  @if (hasUnread()) {
+    <button mat-button (click)="markAllAsRead()">Oznaci sve kao procitano</button>
+  }
+</mat-toolbar>
+
+<div class="content">
+  @if (loading()) {
+    <div class="loading"><mat-spinner diameter="40"></mat-spinner></div>
+  } @else {
+    @if (notifications().length === 0) {
+      <p class="empty">Nemate nijednu notifikaciju.</p>
+    } @else {
+      <div class="notifications-list">
+        @for (notification of notifications(); track notification.id) {
+          <mat-card
+            class="notification-card"
+            [class.unread]="!notification.isRead"
+            [class]="typeClass(notification.type)"
+            (click)="markAsRead(notification)">
+            <mat-card-content>
+              <div class="notification-header">
+                <span class="notification-title">
+                  @if (!notification.isRead) {
+                    <span class="unread-dot">●</span>
+                  }
+                  {{ notification.title }}
+                </span>
+                <span class="notification-date">
+                  {{ notification.createdAt | date:'dd.MM.yyyy. HH:mm' }}
+                </span>
+              </div>
+              <p class="notification-content">{{ notification.content }}</p>
+            </mat-card-content>
+          </mat-card>
+        }
+      </div>
+    }
+  }
+</div>

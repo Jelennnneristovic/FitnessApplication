@@ -1,0 +1,72 @@
+<div class="list-container">
+  <h2>Treneri</h2>
+
+  <div class="filters">
+    <mat-form-field appearance="outline">
+      <mat-label>Pretraga</mat-label>
+      <input matInput [(ngModel)]="keyword" (keyup.enter)="onSearch()" placeholder="ime, email...">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Status</mat-label>
+      <mat-select [(ngModel)]="selectedStatus">
+        <mat-option [value]="null">Svi</mat-option>
+        <mat-option [value]="UserStatus.Active">Aktivan</mat-option>
+        <mat-option [value]="UserStatus.InActive">Neaktivan</mat-option>
+        <mat-option [value]="UserStatus.PendingApproval">Ceka odobrenje</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" (click)="onSearch()">Pretrazi</button>
+    <button mat-button (click)="clearFilters()">Ocisti</button>
+  </div>
+
+  @if (loading()) {
+    <div class="loading"><mat-spinner diameter="40"></mat-spinner></div>
+  } @else {
+    @if (trainers().length === 0) {
+      <p class="empty">Nema trenera.</p>
+    } @else {
+      <table mat-table [dataSource]="trainers()" class="users-table">
+
+        <ng-container matColumnDef="username">
+          <th mat-header-cell *matHeaderCellDef>Korisnicko ime</th>
+          <td mat-cell *matCellDef="let user">{{ user.username }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="fullName">
+          <th mat-header-cell *matHeaderCellDef>Ime i prezime</th>
+          <td mat-cell *matCellDef="let user">{{ user.firstName }} {{ user.lastName }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="email">
+          <th mat-header-cell *matHeaderCellDef>Email</th>
+          <td mat-cell *matCellDef="let user">{{ user.email }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef>Status</th>
+          <td mat-cell *matCellDef="let user">
+            <span class="status-badge" [class]="statusClass(user.status)">
+              {{ statusLabel(user.status) }}
+            </span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Akcije</th>
+          <td mat-cell *matCellDef="let user">
+            @if (user.status === UserStatus.Active) {
+              <button mat-button color="warn" (click)="deactivate(user.id)">Deaktiviraj</button>
+            } @else {
+              <button mat-button color="primary" (click)="activate(user.id)">Aktiviraj</button>
+            }
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    }
+  }
+</div>

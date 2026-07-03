@@ -1,0 +1,56 @@
+<mat-toolbar color="primary" class="toolbar">
+  <button mat-button (click)="goBack()">← Nazad</button>
+  <span class="title">Moji planovi</span>
+  <span class="spacer"></span>
+  <button mat-raised-button color="accent" (click)="createPlan()">+ Novi plan</button>
+</mat-toolbar>
+
+<div class="content">
+  @if (loading()) {
+    <div class="loading"><mat-spinner diameter="40"></mat-spinner></div>
+  } @else {
+    @if (plans().length === 0) {
+      <p class="empty">Nemate nijedan plan. Kreirajte svoj prvi plan treninga!</p>
+    } @else {
+      <div class="plans-grid">
+    <div class="plans-grid">
+      @for (plan of plans(); track plan.id) {
+        <mat-card class="plan-card">
+          <mat-card-header>
+            <mat-card-title>{{ plan.title }}</mat-card-title>
+            <mat-card-subtitle>
+              {{ plan.categoryName }} ·
+              <span [class.archived]="plan.status === TrainingPlanStatus.Archived">
+                {{ statusLabel(plan.status) }}
+              </span>
+            </mat-card-subtitle>
+          </mat-card-header>
+
+          <mat-card-content>
+            <p class="plan-desc">{{ plan.description }}</p>
+
+            <div class="plan-info">
+              <span class="info-chip">{{ typeLabel(plan.type) }}</span>
+              <span class="info-chip">Trajanje: {{ plan.durationMinutes }} min</span>
+              <span class="info-chip">Br. ucesnika: {{ plan.maxParticipants }}</span>
+            </div>
+
+            @if (plan.location) {
+              <p class="plan-location">📍 {{ plan.location }}</p>
+            }
+
+            <div class="plan-price">{{ plan.price }} RSD</div>
+          </mat-card-content>
+
+          <mat-card-actions class="plan-actions">
+            <button mat-stroked-button color="primary" (click)="editPlan(plan)">Izmeni</button>
+            <button mat-stroked-button color="accent" (click)="viewSessions(plan)">Sesije</button>
+            <button mat-stroked-button color="warn" (click)="deletePlan(plan)">Obrisi</button>
+          </mat-card-actions>
+        </mat-card>
+      }
+    </div>
+      </div>
+    }
+  }
+</div>

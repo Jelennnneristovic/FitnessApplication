@@ -1,0 +1,16 @@
+<h2 mat-dialog-title>Odbij zahtev</h2>
+
+<mat-dialog-content>
+  <p class="plan-info">Plan: <strong>{{ data.planTitle }}</strong></p>
+
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Razlog odbijanja (opciono)</mat-label>
+    <textarea matInput [(ngModel)]="rejectionReason" rows="3"
+      placeholder="npr. Grupa je popunjena"></textarea>
+  </mat-form-field>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Otkazi</button>
+  <button mat-raised-button color="warn" (click)="onConfirm()">Odbij zahtev</button>
+</mat-dialog-actions>
