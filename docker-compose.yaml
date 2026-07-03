@@ -1,0 +1,97 @@
+services:
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: fitness-sqlserver
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "Fitness_Pass123!"
+      MSSQL_PID: "Express"
+      MSSQL_MEMORY_LIMIT_MB: "1536"    # ← ogranici SQL na 1.5 GB
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqldata:/var/opt/mssql
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+    healthcheck:
+      test: /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "Fitness_Pass123!" -C -Q "SELECT 1" || exit 1
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  userservice:
+    build:
+      context: ./UserService
+      dockerfile: Dockerfile
+    container_name: fitness-userservice
+    restart: on-failure
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
+      ConnectionStrings__DefaultConnection: "Server=sqlserver;Database=UserServiceDb;User Id=sa;Password=Fitness_Pass123!;TrustServerCertificate=True;"
+      Services__TrainingServiceUrl: "http://trainingservice:8080"
+
+  trainingservice:
+    build:
+      context: ./TrainingManagementService
+      dockerfile: Dockerfile
+    container_name: fitness-trainingservice
+    restart: on-failure
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
+      ConnectionStrings__DefaultConnection: "Server=sqlserver;Database=TrainingManagementDb;User Id=sa;Password=Fitness_Pass123!;TrustServerCertificate=True;"
+      Services__NotificationServiceUrl: "http://notificationservice:8080"
+
+
+  notificationservice:
+    build:
+      context: ./NotificationService
+      dockerfile: Dockerfile
+    container_name: fitness-notificationservice
+    restart: on-failure
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
+      MongoDb__ConnectionString: "mongodb+srv://notifuser:notifikacije123@cluster0.xag0tbu.mongodb.net/?appName=Cluster0"
+      MongoDb__DatabaseName: "NotificationDb"
+      MongoDb__NotificationsCollection: "Notifications"
+
+  gateway:
+    build:
+      context: ./APIGateway
+      dockerfile: Dockerfile
+    container_name: fitness-gateway
+    restart: on-failure
+    depends_on:
+      - userservice
+      - trainingservice
+      - notificationservice
+    ports:
+      - "7001:8080" 
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
+      ReverseProxy__Clusters__user-service__Destinations__destination1__Address: "http://userservice:8080"
+      ReverseProxy__Clusters__training-service__Destinations__destination1__Address: "http://trainingservice:8080"
+      ReverseProxy__Clusters__notification-service__Destinations__destination1__Address: "http://notificationservice:8080"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: fitness-frontend
+    restart: on-failure
+    depends_on:
+      - gateway
+    ports:
+      - "4200:80"
+
+volumes:
+  sqldata:
